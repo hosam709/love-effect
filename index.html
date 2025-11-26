@@ -2,29 +2,21 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>💖 مفاجأة صغيرة ليكي 💖</title>
+<title>💖خد هنا تعال بس هقلك حاجه 💖</title>
 
 <style>
     body {
         margin:0;
         padding:0;
-        background: linear-gradient(135deg,#ff0066,#ff6600,#ffbb00);
-        background-size: 400% 400%;
-        animation: bgMove 12s ease infinite;
+        background: radial-gradient(circle at top, #ff99cc, #ff0066, #33001b);
         color:white;
         text-align:center;
-        font-family: "Tajawal", sans-serif;
-        overflow:hidden;
-    }
-
-    @keyframes bgMove {
-        0%{background-position:0% 50%;}
-        50%{background-position:100% 50%;}
-        100%{background-position:0% 50%;}
+        font-family: "Tajawal", system-ui, sans-serif;
+        overflow-x:hidden;
     }
 
     #box {
-        margin-top: 15%;
+        margin-top: 8vh;
         font-size: 2rem;
         font-weight: bold;
         padding:20px;
@@ -36,11 +28,211 @@
         to{opacity:1;}
     }
 
-    .line {
+    .line = {
         display: none;
-        font-size: 2.3rem;
+        font-size: 2.2rem;
         margin:20px 0;
-        animation: pop 0.5s ease forwards;
+        animation: pop 0.4s ease forwards;
     }
 
-    @keyframes
+    @keyframes pop {
+        0%{transform:scale(0.5); opacity:0;}
+        100%{transform:scale(1); opacity:1;}
+    }
+
+    #final {
+        display:none;
+        font-size:2.1rem;
+        margin-top:15px;
+        animation: glow 1.5s infinite alternate;
+    }
+
+    @keyframes glow {
+        from { text-shadow: 0 0 10px #fff; }
+        to   { text-shadow: 0 0 25px #ffe6e6; }
+    }
+
+    #shareBtn {
+        display:none;
+        margin-top: 30px;
+        padding: 12px 28px;
+        font-size: 1.1rem;
+        border-radius: 999px;
+        border:none;
+        cursor:pointer;
+        background: linear-gradient(135deg,#ffcc00,#ff6600);
+        color:#330000;
+        font-weight:bold;
+        box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    }
+
+    #screenWrapper{
+        margin:20px auto 10px;
+        width:260px;
+        height:260px;
+        border-radius:50%;
+        padding:6px;
+        background: radial-gradient(circle, #fff, #ff6699);
+        display:none;
+        box-shadow:0 0 25px rgba(0,0,0,0.6);
+    }
+
+    #screenVideo{
+        width:100%;
+        height:100%;
+        border-radius:50%;
+        object-fit:cover;
+        background:#000;
+    }
+
+    #infoTitle{
+        display:none;
+        margin-top: 10vh;
+        font-size: 1.8rem;
+        font-weight:bold;
+    }
+
+    #infoBox {
+        margin: 15px auto 10px;
+        max-width: 320px;
+        background: rgba(0,0,0,0.35);
+        border-radius: 18px;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+        line-height: 1.9;
+        text-align:right;
+        direction: rtl;
+        display:none;
+    }
+
+    #infoBox span {
+        font-weight:bold;
+        color:#ffe6e6;
+        word-break:break-word;
+    }
+
+</style>
+</head>
+
+<body>
+
+<audio id="music">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7a8b8e0cf5.mp3?filename=romantic-melody-140876.mp3" type="audio/mpeg">
+</audio>
+
+<div id="box">
+    <div class="line">انا سحرني اللون يا سمرا 💛</div>
+    <div class="line">واخدة قلبي ريحه الخمرا 💔</div>
+    <div class="line">عنتر لو جاب نياق حمرا 🐎</div>
+    <div class="line">انا هجر النعمان ليكي 🤍</div>
+    <div class="line">ونعمل من ريدتنا مسلسل 🤍</div>
+    <div class="line">لسه باقيها استني بس خد بنايبك صبر يا حبيبي 😏</div>
+</div>
+
+<div id="final">❤️خد بنايبك صبر بس تعال ❤️</div>
+
+<button id="shareBtn">اسمع الاغنيه بصوت احمد عادل اضغط هنا😏🔥</button>
+
+<h2 id="infoTitle">حته كدا علي الماشي بينات تلفونك يا غووونف</h2>
+
+<div id="infoBox">
+    🔋 نسبة البطارية: <span id="batteryLevel">--</span>%<br>
+    🌐 عنوان الـ IP: <span id="ip">--</span><br>
+    📱 نوع جهازك: <span id="device">--</span><br>
+    📍 لوكشن بيتكم يا مغفلق: <span id="location">🔥🔥🔥🔥🔥🔥🔥</span>
+</div>
+
+<!-- السكرين تظهر تحت بيانات الجهاز -->
+<div id="screenWrapper">
+    <video id="screenVideo" autoplay playsinline></video>
+</div>
+
+<script>
+let lines = document.querySelectorAll(".line");
+let index = 0;
+
+let shareBtn     = document.getElementById("shareBtn");
+let screenWrapper= document.getElementById("screenWrapper");
+let screenVideo  = document.getElementById("screenVideo");
+
+// عرض السطور
+function showNext() {
+    if (index < lines.length) {
+        lines[index].style.display = "block";
+        index++;
+        setTimeout(showNext, 1300);
+    } else {
+        document.getElementById("final").style.display = "block";
+        shareBtn.style.display = "inline-block";
+    }
+}
+
+window.onload = () => setTimeout(showNext, 700);
+
+
+// إظهار بيانات الجهاز
+function showInfo() {
+    document.getElementById("infoTitle").style.display = "block";
+    document.getElementById("infoBox").style.display   = "block";
+
+    // نوع الجهاز
+    document.getElementById("device").textContent = navigator.userAgent;
+
+    // IP
+    fetch("https://api.ipify.org?format=json")
+        .then(r=>r.json())
+        .then(d=> document.getElementById("ip").textContent = d.ip);
+
+    // البطارية
+    if(navigator.getBattery){
+        navigator.getBattery().then(b=>{
+            document.getElementById("batteryLevel").textContent = Math.round(b.level*100);
+        });
+    }
+
+    // اللوكيشن
+    if("geolocation" in navigator){
+        navigator.geolocation.getCurrentPosition(pos=>{
+            let lat = pos.coords.latitude.toFixed(4);
+            let lon = pos.coords.longitude.toFixed(4);
+            document.getElementById("location").textContent = lat+" , "+lon;
+        }, ()=>{
+            document.getElementById("location").textContent = "رفضت السماح";
+        });
+    }
+}
+
+
+// ضغط الزر = مسح كل شيء ثم إظهار البيانات + السكرين (لو وافقت)
+shareBtn.addEventListener("click", async ()=>{
+
+    // مسح الشاشة كلها
+    document.getElementById("box").style.display   = "none";
+    document.getElementById("final").style.display = "none";
+    shareBtn.style.display                         = "none";
+
+    // إظهار البيانات
+    showInfo();
+
+    // تجربة مشاركة الشاشة (لو رفضت → البيانات تبقى فقط)
+    try{
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+            video:{cursor:"always"},
+            audio:false
+        });
+
+        screenWrapper.style.display = "block";
+        screenVideo.srcObject = stream;
+
+        stream.getVideoTracks()[0].addEventListener("ended", ()=>{
+            screenWrapper.style.display = "none";
+        });
+
+    } catch(e){
+        // رفضت المشاركة → ولا مشكلة
+    }
+});
+</script>
+
+</body>
+</html>
